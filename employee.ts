@@ -24,42 +24,51 @@ import Person from './person';
     private static numEmployees : number = 0;
     public employeeID: number  = 0;
 
-    constructor ();
-    constructor (deptName: string);
-    constructor (name: string, birthYear: number, deptName: string);
     constructor (...args : any[]) {
        super(); //apparantly when extending super has to be called first before 'this'.
        Employee.numEmployees += 1;
-        
+        //Violates Single Responsibility principle 
        if (args.length === 0) {
-        this.deptName = "";
-        this.employeeID += 1;
+          this.default_constructor();
        }
        if (args.length === 1 ) {
-            if (typeof args[0] !== "string") {
-                throw new Error("must pass a string value");
-            }
-
-        this.deptName = args[0];
-        this.employeeID += 1; 
+          this.initial_name_constructor(args);
        }
 
        if (args.length === 3) {
+          this.full_argument_constructor(args)
+       }
+    }
+
+    private default_constructor() {
+        this.deptName === "";
+        this.employeeID += 1;
+    }
+
+    private initial_name_constructor(args) {
         if (typeof args[0] !== "string") {
             throw new Error("must pass a string value");
         }
-        if (typeof args[1] !== "number") {
-            throw new Error("must pass a string value");
-        }
-        if (typeof args[2] !== "number") {
-            throw new Error("must pass a string value");
-        }
-            this.name = args[0];
-            this.birthYear = args[1]
-            this.deptName = args[2];
-            this.employeeID += 1; 
-        }
-       
+        this.deptName = args[0];
+        this.employeeID += 1; 
     }
+
+    private full_argument_constructor(args) {
+        if (typeof args.shift(0) !== "string") {
+            throw new Error("must pass a string value");
+        }
+        
+        if (!args.every((input) => typeof input === "number")) {
+            throw new Error("must pass a number value");
+        }
+            
+        this.name = args[0];
+        this.birthYear = args[1]
+        this.deptName = args[2];
+        this.employeeID += 1; 
+    }
+
+
+
 
  }
